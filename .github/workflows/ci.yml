@@ -27,6 +27,14 @@ jobs:
         if: runner.os == 'macOS'
         run: brew install ninja
 
+      - name: Cache CMake FetchContent
+        uses: actions/cache@v4
+        with:
+          path: build/_deps
+          key: ${{ runner.os }}-deps-${{ hashFiles('CMakeLists.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-deps-
+
       - name: Configure (Unix)
         if: runner.os != 'Windows'
         run: cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DDATACONV_BUILD_TESTS=ON
