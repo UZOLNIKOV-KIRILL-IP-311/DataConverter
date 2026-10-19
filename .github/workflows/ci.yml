@@ -48,3 +48,23 @@ jobs:
 
       - name: Test
         run: ctest --test-dir build -C Release --output-on-failure --output-junit test-report.xml
+
+      - name: Upload test report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-report-${{ matrix.os }}
+          path: build/test-report.xml
+          if-no-files-found: warn
+
+      - name: Upload binary
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dataconv-${{ matrix.os }}
+          path: |
+            build/dataconv
+            build/dataconv.exe
+            build/Release/dataconv
+            build/Release/dataconv.exe
+          if-no-files-found: warn
